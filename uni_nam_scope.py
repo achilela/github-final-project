@@ -36,7 +36,7 @@ def main():
     st.title("LLM Spam Classifier")
 
     # Load the trained model from GitHub
-    model_url = "https://github.com/your-username/llm-spam-classifier/raw/main/review_classifier.pth"
+    model_url = "https://github.com/achilela/llm-spam-classifier/raw/main/review_classifier.pth"
     model_state_dict = torch.hub.load_state_dict_from_url(model_url)
     model = ...  # Instantiate your model architecture
     model.load_state_dict(model_state_dict)
