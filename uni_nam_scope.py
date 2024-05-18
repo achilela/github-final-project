@@ -33,7 +33,7 @@ def classify_review(text, model, tokenizer, device, max_length=None, pad_token_i
 
 # Streamlit app
 def main():
-    st.title("LLM Spam Classifier")
+    st.title("Unisup Naming Classifier")
 
     # Load the trained model from GitHub
     model_url = "https://github.com/achilela/unisup_naming_classifier/main/review_classifier.pth"
