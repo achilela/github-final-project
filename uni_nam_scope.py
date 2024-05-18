@@ -9,21 +9,6 @@ Code repository: <a href="https://github.com/rasbt/LLMs-from-scratch">https://gi
 # %%
 """
 # Unisup Naming Notifcn Text Classification
-"""
-
-# %%
-# %%
-"""
-## E.2 Preparing the dataset
-"""
-
-# %%
-"""
-- This section repeats the code from chapter 6 to load and prepare the dataset
-- Instead of repeating this code, one could copy & paste the LoRA code from section E.3 at the end of the chapter 6 notebook
-- (The LoRA code was originally the last section of chapter 6 but was moved to the appendix due to the length of chapter 6)
-- In similar fashion, we could also apply LoRA to the models in chapter 7 for instruction finetuning
-"""
 
 # %%
 from pathlib import Path
