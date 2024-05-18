@@ -8,22 +8,10 @@ Code repository: <a href="https://github.com/rasbt/LLMs-from-scratch">https://gi
 
 # %%
 """
-# Finetuning for Unisup Naming Notifcn Text Classification
+# Unisup Naming Notifcn Text Classification
 """
 
 # %%
-from importlib.metadata import version
-
-pkgs = ["matplotlib",
-        "numpy",
-        "tiktoken",
-        "torch",
-        "tensorflow", # For OpenAI's pretrained weights
-        "pandas"      # Dataset loading
-       ]
-for p in pkgs:
-    print(f"{p} version: {version(p)}")
-
 # %%
 """
 ## E.2 Preparing the dataset
