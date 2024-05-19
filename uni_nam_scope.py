@@ -1,9 +1,7 @@
 import streamlit as st
-import pandas as pd
 import torch
 from transformers import GPT2Tokenizer
-from io import BytesIO
-import requests
+import pandas as pd
 
 # Load the tokenizer
 tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
@@ -31,40 +29,48 @@ def classify_review(text, model, tokenizer, device, max_length=None, pad_token_i
     # Return the classified result
     return "Proper Naming Notfcn" if predicted_label == 1 else "Wrong Naming Notificn"
 
+# Load the trained model from the local directory
+model_path = "clv__classifier"
+model = torch.load(model_path)
+model.eval()
+
+# Set the device to run the model on (GPU if available, else CPU)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model.to(device)
+
 # Streamlit app
 def main():
-    st.title("Unisup Naming Classifier")
+    st.title("Text Classification App")
 
-    # Load the trained model from GitHub
-    model_url = "https://github.com/achilela/unisup_naming_classifier/main/review_classifier.pth"
-    model_state_dict = torch.hub.load_state_dict_from_url(model_url)
-    model = ...  # Instantiate your model architecture
-    model.load_state_dict(model_state_dict)
-    model.eval()
+    # Input options
+    input_option = st.radio("Select input option", ("Single Text Query", "Upload Table"))
 
-    # Sidebar options
-    input_option = st.sidebar.selectbox("Select Input Option", ["Text Input", "File Upload"])
-
-    if input_option == "Text Input":
-        # Text input for single text classification
-        text_input = st.text_input("Enter the text to classify")
+    if input_option == "Single Text Query":
+        # Single text query input
+        text_query = st.text_input("Enter text query")
         if st.button("Classify"):
-            if text_input:
-                # Classify the text
-                predicted_label = classify_review(text_input, model, tokenizer, device, max_length=train_dataset.max_length)
-                st.success(f"Predicted Label: {predicted_label}")
+            if text_query:
+                # Classify the text query
+                predicted_label = classify_review(text_query, model, tokenizer, device, max_length=train_dataset.max_length)
+                st.write("Predicted Label:")
+                st.write(predicted_label)
             else:
-                st.warning("Please enter some text to classify.")
+                st.warning("Please enter a text query.")
 
-    elif input_option == "File Upload":
-        # File uploader for classifying texts from an Excel file
-        uploaded_file = st.file_uploader("Choose an Excel file", type=["xlsx", "xls"])
+    elif input_option == "Upload Table":
+        # Table upload
+        uploaded_file = st.file_uploader("Choose a file", type=["csv", "xlsx"])
         if uploaded_file is not None:
-            # Read the Excel file
-            df = pd.read_excel(uploaded_file)
-            text_column = st.selectbox("Select the column containing the texts", df.columns)
+            # Read the uploaded file
+            if uploaded_file.name.endswith(".csv"):
+                df = pd.read_csv(uploaded_file)
+            else:
+                df = pd.read_excel(uploaded_file)
 
-            # Classify the texts
+            # Select the text column
+            text_column = st.selectbox("Select the text column", df.columns)
+
+            # Classify the texts in the selected column
             predicted_labels = []
             for text in df[text_column]:
                 predicted_label = classify_review(text, model, tokenizer, device, max_length=train_dataset.max_length)
@@ -73,7 +79,7 @@ def main():
             # Add the predicted labels to the DataFrame
             df["Predicted Label"] = predicted_labels
 
-            # Display the results
+            # Display the DataFrame with predicted labels
             st.write(df)
 
 if __name__ == "__main__":
